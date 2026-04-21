@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffd6e8, #e6d6ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 60px;
+  color: #c2185b;
+  text-align: center;
+}
+
+.personagem {
+  width: 150px;
+  margin: 20px;
+  transition: 0.3s;
+}
+
+button {
+  padding: 16px 30px;
+  font-size: 22px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.sim {
+  background: #4CAF50;
+  color: white;
+}
+
+.nao {
+  background: #f44336;
+  color: white;
+  position: absolute;
+}
+
+.final {
+  font-size: 48px;
+  color: #ff4da6;
+  text-align: center;
+}
+
+.final-img {
+  width: 200px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="musica" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<h1>Você aceita namorar comigo? (Do you wanna dance?)</h1>
+
+<!-- 👇 PERSONAGEM INICIAL -->
+<img id="personagem" src="personagem1.png" class="personagem">
+
+<div>
+  <button class="sim" id="sim" onclick="aceitou()">Sim</button>
+  <button class="nao" id="nao" onmouseover="tentarNao()">Não</button>
+</div>
+
+<script>
+
+// 🎵 música
+document.addEventListener("click", () => {
+  const m = document.getElementById("musica");
+  m.muted = true;
+  m.play().then(() => m.muted = false);
+}, { once: true });
+
+// frases do NÃO
+const frasesNao = [
+  "não",
+  "tem certeza?",
+  "sério?",
+  "pensa bem...",
+  "última chance",
+  "vai mesmo dizer não?",
+  "🥺"
+];
+
+// personagens (ordem importa!)
+const personagens = [
+  "personagem1.png", // inicial
+  "personagem2.png",
+  "personagem3.png",
+  "personagem4.png"
+];
+
+let index = 0;
+let tamanhoNao = 1;
+let tamanhoSim = 1;
+let personagemIndex = 0;
+
+// interação com NÃO
+function tentarNao() {
+  const btnNao = document.getElementById("nao");
+  const btnSim = document.getElementById("sim");
+  const img = document.getElementById("personagem");
+
+  // muda frase
+  index = (index + 1) % frasesNao.length;
+  btnNao.innerText = frasesNao[index];
+
+  // diminui NÃO
+  tamanhoNao *= 0.85;
+  btnNao.style.transform = `scale(${tamanhoNao})`;
+
+  // aumenta SIM
+  tamanhoSim *= 1.1;
+  btnSim.style.transform = `scale(${tamanhoSim})`;
+
+  // 👇 troca personagem (SÓ acontece aqui)
+  personagemIndex++;
+  if (personagemIndex >= personagens.length) {
+    personagemIndex = personagens.length - 1; // trava no último
+  }
+  img.src = personagens[personagemIndex];
+
+  // foge
+  btnNao.style.top = Math.random() * window.innerHeight + "px";
+  btnNao.style.left = Math.random() * window.innerWidth + "px";
+}
+
+// 💖 sim
+function aceitou() {
+  document.body.innerHTML = `
+    <h1 class="final">UHUULL, FINALMENTE MINHA NAMORADA!! EU AMO VOCÊEE! 💖</h1>
+    <img src="final.png" class="final-img">
+  `;
+}
+
+</script>
+
+</body>
+</html>
